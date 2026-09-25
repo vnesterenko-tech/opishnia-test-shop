@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+<rect width="400" height="400" fill="#E6E9E4"/>
+<path d="M150 90 h100 v20 q-10 10 -8 30 q70 40 70 120 q0 70 -112 80 q-112 -10 -112 -80 q0 -80 70 -120 q2 -20 -8 -30z" fill="#4B5D8A"/>
+<path d="M112 230 q88 40 176 0" stroke="#F3F1E8" stroke-width="10" fill="none"/>
+<path d="M120 270 q80 34 160 0" stroke="#C98A1B" stroke-width="6" fill="none"/>
+<text x="200" y="370" font-family="sans-serif" font-size="22" text-anchor="middle" fill="#1B1E24">OP-011</text>
+</svg>
