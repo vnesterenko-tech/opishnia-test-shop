@@ -3,8 +3,8 @@
 Статичний магазин кераміки «Опішнянська полиця»: 20 товарів, JSON-LD на кожній сторінці товару.
 Нічого збирати не треба: це готові HTML-файли для GitHub Pages.
 
-Адреса сайту: https://vnesterenko-tech.github.io/opishnia-test-shop/
-Для підключення в кабінеті: `https://vnesterenko-tech.github.io/opishnia-test-shop/index.html`
+Адреса сайту: https://vnesterenko-tech.github.io/
+Для підключення в кабінеті: `https://vnesterenko-tech.github.io/index.html`
 
 ## Де правити ціну й наявність
 
@@ -63,7 +63,7 @@
     <img src="img/makitra-1l.svg" alt="" width="72" height="72">
     <span class="nm">Макітерка мала 1 л</span></a></li>
 
-і в `sitemap.xml`: `<url><loc>https://vnesterenko-tech.github.io/opishnia-test-shop/product/makitra-1l.html</loc></url>`.
+і в `sitemap.xml`: `<url><loc>https://vnesterenko-tech.github.io/product/makitra-1l.html</loc></url>`.
 
 Результат: на сайті 20 товарів, у каталозі 21 запис.
 
