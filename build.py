@@ -11,6 +11,8 @@ from pathlib import Path
 BASE_URL = "https://vnesterenko-tech.github.io"
 SHOP_NAME = "Опішнянська полиця"
 CURRENCY = "UAH"
+# Віджет Huntbot (тест). Вставляється в кінець <body> на всіх сторінках. Порожній рядок = без віджета.
+WIDGET_SCRIPT = '<script src="https://api-test.huntbot.ai/api/v1/widget/69f0c65bddbbc842644c2fa7/widget.js" async></script>'
 ROOT = Path(__file__).parent
 OUT = ROOT / "_site"
 
@@ -120,6 +122,7 @@ def layout(title, body, cats, up, jsonld=None):
 <nav>{nav}</nav></header>
 <main>{body}</main>
 <footer>Кераміка з Опішні. Доставка Новою поштою по Україні.</footer>
+{WIDGET_SCRIPT}
 </body></html>
 """
 
