@@ -16,6 +16,27 @@ WIDGET_SCRIPT = '<script src="https://api-test.huntbot.ai/api/v1/widget/69f0c65b
 ROOT = Path(__file__).parent
 OUT = ROOT / "_site"
 
+# Інформаційні сторінки: (файл у pages/ без .html, назва в меню). Текст редагується в pages/<файл>.html
+INFO_PAGES = [
+    ("pro-nas", "Про нас"),
+    ("kontakty", "Контакти та графік"),
+    ("dostavka-i-oplata", "Доставка і оплата"),
+    ("povernennia", "Обмін і повернення"),
+    ("dohliad", "Догляд і FAQ"),
+]
+# Дані організації для JSON-LD (сторінка «Контакти»). Тестові, вигадані.
+BUSINESS = {
+    "@context": "https://schema.org", "@type": "Store", "name": SHOP_NAME,
+    "url": BASE_URL, "telephone": "+380000000000", "email": "info@opishnia-polytsia.example",
+    "address": {"@type": "PostalAddress", "streetAddress": "вул. Гончарна, 12", "addressLocality": "Опішня",
+                "addressRegion": "Полтавська обл.", "postalCode": "38164", "addressCountry": "UA"},
+    "openingHoursSpecification": [
+        {"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+         "opens": "09:00", "closes": "18:00"},
+        {"@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "10:00", "closes": "15:00"},
+    ],
+}
+
 STATUSES = {
     "В наявності": "https://schema.org/InStock",
     "Немає в наявності": "https://schema.org/OutOfStock",
@@ -109,6 +130,7 @@ def pot_svg(p, i):
 
 def layout(title, body, cats, up, jsonld=None):
     nav = "".join(f'<a href="{up}category/{s}.html">{esc(n)}</a>' for s, n in cats)
+    foot = "".join(f'<a href="{up}{p}.html">{esc(t)}</a>' for p, t in INFO_PAGES)
     ld = f'\n<script type="application/ld+json">\n{json.dumps(jsonld, ensure_ascii=False, indent=2)}\n</script>' if jsonld else ""
     return f"""<!doctype html>
 <html lang="uk"><head><meta charset="utf-8">
@@ -121,7 +143,8 @@ def layout(title, body, cats, up, jsonld=None):
 <header class="top"><a class="brand" href="{up}index.html">{esc(SHOP_NAME)}</a>
 <nav>{nav}</nav></header>
 <main>{body}</main>
-<footer>Кераміка з Опішні. Доставка Новою поштою по Україні.</footer>
+<footer><nav class="foot">{foot}</nav>
+<p>Кераміка з Опішні. Доставка Новою поштою по Україні.</p></footer>
 {WIDGET_SCRIPT}
 </body></html>
 """
@@ -185,13 +208,21 @@ def build():
             f'<p class="lead">{len(products)} виробів майстрів з Опішні</p><ul class="list">{items}</ul>')
     (OUT / "index.html").write_text(layout(SHOP_NAME, body, cats, ""), encoding="utf-8")
 
-    urls = [f"{BASE_URL}/index.html"] + [f"{BASE_URL}/category/{s}.html" for s, _ in cats] + \
+    for slug, title in INFO_PAGES:
+        src = ROOT / "pages" / f"{slug}.html"
+        if not src.exists():
+            sys.exit(f"Немає файлу pages/{slug}.html для сторінки «{title}»")
+        body = f'<article class="page">{src.read_text(encoding="utf-8")}</article>'
+        ld = BUSINESS if slug == "kontakty" else None
+        (OUT / f"{slug}.html").write_text(layout(title, body, cats, "", ld), encoding="utf-8")
+
+    urls = [f"{BASE_URL}/index.html"] + [f"{BASE_URL}/{s}.html" for s, _ in INFO_PAGES] + [f"{BASE_URL}/category/{s}.html" for s, _ in cats] + \
            [f"{BASE_URL}/product/{p['slug']}.html" for p in products]
     (OUT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{u}</loc></url>\n" for u in urls) + "</urlset>\n", encoding="utf-8")
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {BASE_URL}/sitemap.xml\n", encoding="utf-8")
-    print(f"Зібрано {len(products)} товарів, {len(cats)} категорій -> {OUT}")
+    print(f"Зібрано {len(products)} товарів, {len(cats)} категорій, {len(INFO_PAGES)} інфо-сторінок -> {OUT}")
 
 
 if __name__ == "__main__":
